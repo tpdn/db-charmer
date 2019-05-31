@@ -6,7 +6,7 @@ set -u # Exit on uninitialized variables
 
 cd test-project
 export RAILS_ENV=test
-export RAILS_VERSION=3.2.22.5
+export RAILS_VERSION=4.0.13
 
 # Configure database access
 cp -f config/database.yml.example config/database.yml
