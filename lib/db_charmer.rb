@@ -27,11 +27,6 @@ module DbCharmer
     ::ActiveRecord::VERSION::MAJOR == 2
   end
 
-  # Detect broken Rails version
-  def self.rails324?
-    ActiveRecord::VERSION::STRING == '3.2.4'
-  end
-
   #-------------------------------------------------------------------------------------------------
   # Returns true if we're running within a Rails project
   def self.running_with_rails?
@@ -70,10 +65,6 @@ module DbCharmer
     ::ActionController::Base.send(:include, DbCharmer::ActionController::ForceSlaveReads::InstanceMethods)
   end
 end
-
-#---------------------------------------------------------------------------------------------------
-# Print warning about the broken Rails 2.3.4
-puts "WARNING: Rails 3.2.4 is not officially supported by DbCharmer. Please upgrade." if DbCharmer.rails324?
 
 #---------------------------------------------------------------------------------------------------
 # Add useful methods to global object
