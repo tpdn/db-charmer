@@ -15,3 +15,4 @@ gem 'db-charmer', :path => gem_path, :require => 'db_charmer'
 
 # Require gems for selected rails version
 gem "rails", ENV['RAILS_VERSION']
+gem 'rails4_upgrade', github: 'alindeman/rails4_upgrade'
