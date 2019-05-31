@@ -90,7 +90,7 @@ describe DbCharmer::ConnectionFactory do
     before do
       DbCharmer::ConnectionFactory.reset!
       @conf = {
-        :adapter => 'mysql',
+        :adapter => 'mysql2',
         :username => "db_charmer_ro",
         :database => "db_charmer_sandbox_test",
         :connection_name => 'sanbox_ro'

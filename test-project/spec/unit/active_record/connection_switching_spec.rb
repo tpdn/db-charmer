@@ -43,7 +43,7 @@ describe DbCharmer, "AR connection switching" do
     context "with a hash parameter" do
       before do
         @conf = {
-          :adapter => 'mysql',
+          :adapter => 'mysql2',
           :username => "db_charmer_ro",
           :database => "db_charmer_sandbox_test",
           :connection_name => 'sanbox_ro'

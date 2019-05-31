@@ -63,9 +63,9 @@ describe "ActiveRecord model with db_magic" do
           User.on_db(:slave01).first
           User.first
           ActiveRecord::Base.connection_handler.clear_all_connections!
-          ActiveRecord::ConnectionAdapters::MysqlAdapter.any_instance.stub(:connect) { raise Mysql::Error, 'Connection error' }
-          expect { User.on_db(:slave01).first }.to raise_error(Mysql::Error)
-          ActiveRecord::ConnectionAdapters::MysqlAdapter.any_instance.unstub(:connect)
+          allow_any_instance_of(ActiveRecord::ConnectionAdapters::Mysql2Adapter).to receive(:execute).and_raise(Mysql2::Error, 'Connection error')
+          expect { User.on_db(:slave01).first }.to raise_error(Mysql2::Error)
+          allow_any_instance_of(ActiveRecord::ConnectionAdapters::Mysql2Adapter).to receive(:execute).and_call_original
           User.connection.connection_name.should == User.on_master.connection.connection_name
         end
       end
