@@ -35,7 +35,7 @@ module DbCharmer
       end
 
       module InstanceMethods
-        DISPATCH_METHOD = (DbCharmer.rails3?) ? :process_action : :perform_action
+        DISPATCH_METHOD = :process_action
 
         def self.included(base)
           base.alias_method_chain DISPATCH_METHOD, :forced_slave_reads

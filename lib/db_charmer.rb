@@ -12,12 +12,6 @@ module DbCharmer
   end
 
   #-------------------------------------------------------------------------------------------------
-  # Used in all Rails3-specific places
-  def self.rails3?
-    ::ActiveRecord::VERSION::MAJOR > 2
-  end
-
-  #-------------------------------------------------------------------------------------------------
   # Returns true if we're running within a Rails project
   def self.running_with_rails?
     defined?(Rails) && Rails.respond_to?(:env)
@@ -65,9 +59,8 @@ require 'db_charmer/connection_proxy'
 require 'db_charmer/force_slave_reads'
 require 'db_charmer/with_remapped_databases'
 
-if DbCharmer.rails3?
-  require "db_charmer/railtie"
-end
+require "db_charmer/railtie"
+
 
 #---------------------------------------------------------------------------------------------------
 # Add our custom class-level attributes to AR models
@@ -82,15 +75,10 @@ ActiveRecord::Base.extend(DbCharmer::ActiveRecord::ConnectionSwitching)
 
 #---------------------------------------------------------------------------------------------------
 # Enable AR logging extensions
-if DbCharmer.rails3?
-  require 'db_charmer/rails3/abstract_adapter/connection_name'
-  require 'db_charmer/rails3/active_record/log_subscriber'
-  ActiveRecord::LogSubscriber.send(:include, DbCharmer::ActiveRecord::LogSubscriber)
-  ActiveRecord::ConnectionAdapters::AbstractAdapter.send(:include, DbCharmer::AbstractAdapter::ConnectionName)
-else
-  require 'db_charmer/rails2/abstract_adapter/log_formatting'
-  ActiveRecord::ConnectionAdapters::AbstractAdapter.send(:include, DbCharmer::AbstractAdapter::LogFormatting)
-end
+require 'db_charmer/rails3/abstract_adapter/connection_name'
+require 'db_charmer/rails3/active_record/log_subscriber'
+ActiveRecord::LogSubscriber.send(:include, DbCharmer::ActiveRecord::LogSubscriber)
+ActiveRecord::ConnectionAdapters::AbstractAdapter.send(:include, DbCharmer::AbstractAdapter::ConnectionName)
 
 #---------------------------------------------------------------------------------------------------
 # Enable connection proxy in AR
@@ -101,12 +89,10 @@ ActiveRecord::Base.send(:include, DbCharmer::ActiveRecord::MultiDbProxy::Instanc
 
 #---------------------------------------------------------------------------------------------------
 # Enable connection proxy for relations
-if DbCharmer.rails3?
-  require 'db_charmer/rails3/active_record/relation_method'
-  require 'db_charmer/rails3/active_record/relation/connection_routing'
-  ActiveRecord::Base.extend(DbCharmer::ActiveRecord::RelationMethod)
-  ActiveRecord::Relation.send(:include, DbCharmer::ActiveRecord::Relation::ConnectionRouting)
-end
+require 'db_charmer/rails3/active_record/relation_method'
+require 'db_charmer/rails3/active_record/relation/connection_routing'
+ActiveRecord::Base.extend(DbCharmer::ActiveRecord::RelationMethod)
+ActiveRecord::Relation.send(:include, DbCharmer::ActiveRecord::Relation::ConnectionRouting)
 
 #---------------------------------------------------------------------------------------------------
 # Enable connection proxy for associations
@@ -143,11 +129,7 @@ ActiveRecord::Migration::CommandRecorder.send(:include, DbCharmer::ActiveRecord:
 
 #---------------------------------------------------------------------------------------------------
 # Enable the magic
-if DbCharmer.rails3?
-  require 'db_charmer/rails3/active_record/master_slave_routing'
-else
-  require 'db_charmer/rails2/active_record/master_slave_routing'
-end
+require 'db_charmer/rails3/active_record/master_slave_routing'
 
 require 'db_charmer/active_record/sharding'
 require 'db_charmer/active_record/db_magic'

@@ -23,7 +23,7 @@ describe "ActiveRecord slave-enabled models" do
         end
 
         it "should not change connection when it's already been changed by on_slave call" do
-          pending "rails3: not sure if we need this spec" if DbCharmer.rails3?
+          pending "rails3: not sure if we need this spec"
           User.on_slave do
             User.on_slave.connection.should_receive(:select_all).and_return([])
             User.should_not_receive(:on_db)
@@ -77,7 +77,7 @@ describe "ActiveRecord slave-enabled models" do
         end
 
         it "should not change connection when it's already been changed by an on_slave call" do
-          pending "rails3: not sure if we need this spec" if DbCharmer.rails3?
+          pending "rails3: not sure if we need this spec"
           User.on_slave do
             User.on_slave.connection.should_receive(:select_value).and_return(1)
             User.should_not_receive(:on_db)
