@@ -22,11 +22,6 @@ module DbCharmer
     rails3? && ::ActiveRecord::VERSION::MINOR >= 1
   end
 
-  # Used in all Rails2-specific places
-  def self.rails2?
-    ::ActiveRecord::VERSION::MAJOR == 2
-  end
-
   #-------------------------------------------------------------------------------------------------
   # Returns true if we're running within a Rails project
   def self.running_with_rails?
@@ -116,13 +111,6 @@ if DbCharmer.rails3?
   require 'db_charmer/rails3/active_record/relation/connection_routing'
   ActiveRecord::Base.extend(DbCharmer::ActiveRecord::RelationMethod)
   ActiveRecord::Relation.send(:include, DbCharmer::ActiveRecord::Relation::ConnectionRouting)
-end
-
-#---------------------------------------------------------------------------------------------------
-# Enable connection proxy for scopes (rails 2.x only)
-if DbCharmer.rails2?
-  require 'db_charmer/rails2/active_record/named_scope/scope_proxy'
-  ActiveRecord::NamedScope::Scope.send(:include, DbCharmer::ActiveRecord::NamedScope::ScopeProxy)
 end
 
 #---------------------------------------------------------------------------------------------------
