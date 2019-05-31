@@ -9,13 +9,7 @@ module DbCharmer
           base.extend const_get("ClassMethods") if const_defined?("ClassMethods")
 
           base.class_eval do
-            if DbCharmer.rails31?
-              alias_method_chain :migrate, :db_wrapper
-            else
-              class << self
-                alias_method_chain :migrate, :db_wrapper
-              end
-            end
+            alias_method_chain :migrate, :db_wrapper
           end
         end
 
@@ -27,36 +21,6 @@ module DbCharmer
 
           def multi_db_names=(names)
             @@multi_db_names[self.name] = names
-          end
-
-          unless DbCharmer.rails31?
-            def migrate_with_db_wrapper(direction)
-              if names = multi_db_names
-                names.each do |multi_db_name|
-                  on_db(multi_db_name) do
-                    migrate_without_db_wrapper(direction)
-                  end
-                end
-              else
-                migrate_without_db_wrapper(direction)
-              end
-            end
-
-            def on_db(db_name)
-              name = db_name.is_a?(Hash) ? db_name[:connection_name] : db_name.inspect
-              announce "Switching connection to #{name}"
-              # Switch connection
-              old_proxy = ::ActiveRecord::Base.db_charmer_connection_proxy
-              db_name = nil if db_name == :default
-              ::ActiveRecord::Base.switch_connection_to(db_name, DbCharmer.connections_should_exist?)
-              # Yield the block
-              yield
-            ensure
-              # Switch it back
-              ::ActiveRecord::Base.verify_active_connections!
-              announce "Switching connection back"
-              ::ActiveRecord::Base.switch_connection_to(old_proxy)
-            end
           end
 
           def db_magic(opts = {})
